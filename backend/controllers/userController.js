@@ -6,21 +6,20 @@ import User from '../models/userModel.js'
 // @route   POST /api/users/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body //distructure data
+  const { email, password } = req.body
 
   const user = await User.findOne({ email })
-//check if user exists and password match
+
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      token: generateToken(user._id),//dont forget the comma
-      //along with the token embedded user id
+      token: generateToken(user._id),
     })
   } else {
-    res.status(401)//unauthorized
+    res.status(401)
     throw new Error('Invalid email or password')
   }
 })
@@ -32,10 +31,9 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
 
   const userExists = await User.findOne({ email })
-  //find by email
 
   if (userExists) {
-    res.status(400) //400 bad request,404 not found
+    res.status(400)
     throw new Error('User already exists')
   }
 
@@ -46,7 +44,7 @@ const registerUser = asyncHandler(async (req, res) => {
   })
 
   if (user) {
-    res.status(201).json({//201 something is created
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -64,7 +62,6 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id)
-  //findById mogoose method
 
   if (user) {
     res.json({
@@ -85,13 +82,15 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id)
 
-  if (user) {//id req.body.name not there, then not change
+  if (user) {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
     if (req.body.password) {
       user.password = req.body.password
     }
+
     const updatedUser = await user.save()
+
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
@@ -113,7 +112,6 @@ const getUsers = asyncHandler(async (req, res) => {
   res.json(users)
 })
 
-
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
@@ -133,7 +131,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password')//dont want password
+  const user = await User.findById(req.params.id).select('-password')
 
   if (user) {
     res.json(user)
@@ -153,7 +151,6 @@ const updateUser = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
     user.isAdmin = req.body.isAdmin
-    // not get the previous one
 
     const updatedUser = await user.save()
 

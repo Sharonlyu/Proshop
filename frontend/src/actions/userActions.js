@@ -27,7 +27,6 @@ import {
 } from '../constants/userConstants'
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants'
 
-//login
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -62,21 +61,19 @@ export const login = (email, password) => async (dispatch) => {
     })
   }
 }
-//logout action
+
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
   localStorage.removeItem('cartItems')
   localStorage.removeItem('shippingAddress')
   localStorage.removeItem('paymentMethod')
   dispatch({ type: USER_LOGOUT })
-  // when logout the state should be reset
   dispatch({ type: USER_DETAILS_RESET })
   dispatch({ type: ORDER_LIST_MY_RESET })
   dispatch({ type: USER_LIST_RESET })
   document.location.href = '/login'
 }
 
-//register
 export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -117,7 +114,6 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 }
 
-//get user details
 export const getUserDetails = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -154,7 +150,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     })
   }
 }
-//update profile
+
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -165,26 +161,23 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState()
 
-    //get token to the header
     const config = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-//make request to the backend
+
     const { data } = await axios.put(`/api/users/profile`, user, config)
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
     })
-    //when update profile in login
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
     })
-    //set userinfo in local storage
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (error) {
     const message =
@@ -201,7 +194,6 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   }
 }
 
-//admin list all users
 export const listUsers = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -239,7 +231,6 @@ export const listUsers = () => async (dispatch, getState) => {
   }
 }
 
-//admin delete, know which user to delete
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -259,7 +250,6 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     await axios.delete(`/api/users/${id}`, config)
 
     dispatch({ type: USER_DELETE_SUCCESS })
-
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -275,7 +265,6 @@ export const deleteUser = (id) => async (dispatch, getState) => {
   }
 }
 
-//admin update users
 export const updateUser = (user) => async (dispatch, getState) => {
   try {
     dispatch({

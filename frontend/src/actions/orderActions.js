@@ -38,9 +38,9 @@ export const createOrder = (order) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-//post request
+
     const { data } = await axios.post(`/api/orders`, order, config)
-//if post request success, then pass data down to state -> placeOrderScreen
+
     dispatch({
       type: ORDER_CREATE_SUCCESS,
       payload: data,
@@ -147,8 +147,6 @@ export const payOrder = (orderId, paymentResult) => async (
   }
 }
 
-
-//deliver order action
 export const deliverOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -190,9 +188,6 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
   }
 }
 
-
-
-//list my orders action
 export const listMyOrders = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -229,7 +224,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
     })
   }
 }
-//list all orders action
+
 export const listOrders = () => async (dispatch, getState) => {
   try {
     dispatch({

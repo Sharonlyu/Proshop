@@ -1,3 +1,8 @@
+// localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+// //save to localstorage (only store strings in json) where we use getState()
+// //because we want to save the entire cart
+
+
 import axios from 'axios'
 import {
   CART_ADD_ITEM,
@@ -7,7 +12,8 @@ import {
 } from '../constants/cartConstants'
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
-  const { data } = await axios.get(`/api/products/${id}`)//get product id from api
+  const { data } = await axios.get(`/api/products/${id}`)
+
   dispatch({
     type: CART_ADD_ITEM,
     payload: {
@@ -19,9 +25,8 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       qty,
     },
   })
+
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
-  //save to localstorage (only store strings in json) where we use getState()
-  //because we want to save the entire cart
 }
 
 export const removeFromCart = (id) => (dispatch, getState) => {
@@ -29,6 +34,7 @@ export const removeFromCart = (id) => (dispatch, getState) => {
     type: CART_REMOVE_ITEM,
     payload: id,
   })
+
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 }
 
